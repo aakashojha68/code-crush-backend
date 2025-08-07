@@ -11,7 +11,6 @@ const authUser = async (req, res, next) => {
     }
 
     const isTokenValid = jwt.verify(token, "DEV_TENDER_WEB");
-    console.log(isTokenValid);
 
     if (!isTokenValid) {
       throw new Error("Token not valid !1");

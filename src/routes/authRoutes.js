@@ -25,7 +25,8 @@ authRouter.post("/signup", async (req, res) => {
 
     const response = await user.save();
 
-    res.send(response);
+    // res.send(response);
+    res.json({ message: "User created successfully !!", data: response });
   } catch (error) {
     res.status(400).send("Error : " + error.message);
   }
@@ -56,7 +57,7 @@ authRouter.post("/login", async (req, res) => {
 
     // send it inside cookie
     res.cookie("token", token);
-    res.send("Logged in successfully !!");
+    res.send({ message: "Logged in successfully !!", data: null });
   } catch (error) {
     res.status(400).send("Error : " + error.message);
   }
@@ -64,7 +65,9 @@ authRouter.post("/login", async (req, res) => {
 
 authRouter.post("/logout", async (req, res) => {
   res.cookie("token", null, { expires: new Date(Date.now()) });
-  res.send("User log out successfully !!");
+  res.send({ message: "User log out successfully !!", data: null });
 });
+
+// TODO: write a api of forgot password
 
 module.exports = authRouter;
