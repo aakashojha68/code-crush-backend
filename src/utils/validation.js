@@ -21,8 +21,8 @@ const validateSignUp = (req, res) => {
   const { firstName, lastName, email, password, gender } = req.body;
   if (!firstName?.trim()) {
     throw new Error("First Name is required");
-  } else if (firstName?.trim()?.length < 3 || firstName?.trim()?.length > 50) {
-    throw new Error("First Name must cotain min 3 character or max 50");
+  } else if (firstName?.trim()?.length < 2 || firstName?.trim()?.length > 50) {
+    throw new Error("First Name must cotain min 2 character or max 50");
   }
 
   if (!lastName?.trim()) {
@@ -53,7 +53,16 @@ const validateSignUp = (req, res) => {
 };
 
 const validateProfileEdit = (req, res) => {
-  const editableKeys = ["firstName", "lastName", "gender", "hobbies"];
+  const editableKeys = [
+    "firstName",
+    "lastName",
+    "gender",
+    "hobbies",
+    "photoUrl",
+    "age",
+    "about",
+    "phoneNumber",
+  ];
 
   validateRequestBody(req, res, editableKeys);
 

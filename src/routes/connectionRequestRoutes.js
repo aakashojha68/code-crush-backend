@@ -6,6 +6,7 @@ const {
 } = require("../utils/validation");
 const User = require("../model/user");
 const ConnectionRequest = require("../model/connectionRequest");
+const { USER_SAFE_DATA } = require("../utils/constants");
 
 const connectionRequestRouter = express.Router();
 
@@ -103,11 +104,7 @@ connectionRequestRouter.get("/request/received", authUser, async (req, res) => {
     const pendingConnection = await ConnectionRequest.find({
       toUserId: loggedInUser._id,
       status: "interested",
-    }).populate("fromUserId");
-
-    // const extractedSenderList = pendingConnection.map(
-    //   (record) => record.fromUserId
-    // );
+    }).populate({ path: "fromUserId", select: USER_SAFE_DATA });
 
     res.json({
       message: "Data fetched successfully !!",

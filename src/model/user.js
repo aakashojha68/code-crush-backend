@@ -9,11 +9,11 @@ const userSchema = new Schema(
       type: String,
       required: [true, "First Name is required !!"],
       validate: function () {
-        if (this.firstName?.trim()?.length < 3) {
-          throw new Error("First name must be greater than 2 characters !!");
+        if (this.firstName?.trim()?.length < 2) {
+          throw new Error("First name must be greater than 1 characters !!");
         }
       },
-      minLength: [3, "First name must be 3 character long !!"],
+      minLength: [2, "First name must be 2 character long !!"],
       maxLength: [50, "First name must not exceed 20 characters !!"],
       trim: true,
     },
@@ -65,6 +65,12 @@ const userSchema = new Schema(
       type: String,
       default:
         "https://imgs.search.brave.com/MOJNZZ7jZEobQ9JitvnpUAhqvxpu5zwiYbbnQxtiNQg/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly9pLnBp/bmltZy5jb20vb3Jp/Z2luYWxzLzlmLzRj/L2YwLzlmNGNmMGYy/NGIzNzYwNzdhMmZj/ZGFiMmU4NWMzNTg0/LmpwZw",
+    },
+    age: {
+      type: Number,
+      required: true,
+      min: 16,
+      max: 100,
     },
   },
   { timestamps: true }

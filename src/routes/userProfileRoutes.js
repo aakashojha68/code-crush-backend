@@ -34,7 +34,16 @@ userProfileRoutes.patch("/profile/edit", authUser, async (req, res) => {
     // sanitize the req.body and add more fields to editable
     validateProfileEdit(req, res);
 
-    const { firstName, lastName, hobbies, gender } = req.body;
+    const {
+      firstName,
+      lastName,
+      gender,
+      age,
+      photoUrl,
+      hobbies,
+      about,
+      phoneNumber,
+    } = req.body;
     const { _id } = req.user;
 
     const response = await User.findByIdAndUpdate(
@@ -44,12 +53,15 @@ userProfileRoutes.patch("/profile/edit", authUser, async (req, res) => {
         lastName,
         hobbies,
         gender,
+        age,
+        photoUrl,
+        about,
+        phoneNumber,
       },
       { new: true }
     );
 
     if (!response) {
-      // throw new Error("User not found !!");
       return res.send({ message: "User not found !!", data: null });
     }
 

@@ -2,6 +2,7 @@ const express = require("express");
 const { authUser } = require("../middleware/authUser");
 const ConnectionRequest = require("../model/connectionRequest");
 const User = require("../model/user");
+const { USER_SAFE_DATA } = require("../utils/constants");
 
 const userRouter = express.Router();
 
@@ -12,7 +13,10 @@ userRouter.get("/user/connections", authUser, async (req, res) => {
     const connections = await ConnectionRequest.find({
       $or: [{ toUserId: loggedInUser._id }, { fromUserId: loggedInUser._id }],
       status: "accepted",
-    }).populate([{ path: "fromUserId" }, { path: "toUserId" }]);
+    }).populate([
+      { path: "fromUserId", select: USER_SAFE_DATA },
+      { path: "toUserId", select: USER_SAFE_DATA },
+    ]);
 
     const extractedConnections = connections.map((user) =>
       user.fromUserId._id.toString() === loggedInUser._id.toString()
@@ -36,6 +40,10 @@ userRouter.get("/user/feed", authUser, async (req, res) => {
 
   try {
     const loggedInUser = req.user;
+    const { limit } = req.query || 10;
+
+    const intLimit = limit > 10 ? 10 : parseInt(limit);
+
     const connections = await ConnectionRequest.find({
       $or: [{ fromUserId: loggedInUser._id }, { toUserId: loggedInUser._id }],
     });
@@ -46,11 +54,18 @@ userRouter.get("/user/feed", authUser, async (req, res) => {
       uniqueUserId.add(req.toUserId.toString());
     });
 
-    const users = await User.find({ _id: { $nin: [...uniqueUserId] } });
+    const users = await User.find({ _id: { $nin: [...uniqueUserId] } }).limit(
+      intLimit
+    );
+
+    const totalUsers = await User.countDocuments({
+      _id: { $nin: [...uniqueUserId] },
+    });
 
     res.status(200).json({
       message: "Detail fetched successfully !!",
       data: users,
+      totalUsers,
     });
   } catch (error) {
     res.send(400).json({ message: "Error - " + error.message });

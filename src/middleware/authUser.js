@@ -1,32 +1,45 @@
 const jwt = require("jsonwebtoken");
 const User = require("../model/user");
+const { USER_SAFE_DATA } = require("../utils/constants");
 
 const authUser = async (req, res, next) => {
   try {
-    // console.log(req.cookies);
     const { token } = req.cookies;
 
     if (!token) {
-      throw new Error("Token not valid !!");
+      return res
+        .status(401)
+        .json({ message: "Token not valid !!", data: null });
     }
 
     const isTokenValid = jwt.verify(token, "DEV_TENDER_WEB");
 
     if (!isTokenValid) {
-      throw new Error("Token not valid !1");
+      return res
+        .status(401)
+        .json({ message: "Token not valid !!", data: null });
     }
 
     const { _id } = isTokenValid;
-    const loggedInUser = await User.findOne({ _id: _id });
+    const loggedInUser = await User.findOne({ _id: _id }).select(
+      USER_SAFE_DATA
+    );
 
     if (!loggedInUser) {
-      throw new Error("User not found !!");
+      return res.status(400).json({ message: "User not found !!", data: null });
     }
 
     req.user = loggedInUser;
     next();
   } catch (error) {
-    res.status(400).send("Error : " + error.message);
+    if (error.name === "TokenExpiredError") {
+      return res.status(401).json({
+        message: error.message,
+        data: null,
+      });
+    } else {
+      return res.status(400).send("Error : " + error.message);
+    }
   }
 };
 
