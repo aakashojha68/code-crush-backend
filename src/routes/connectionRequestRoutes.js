@@ -85,8 +85,6 @@ connectionRequestRouter.get(
 
       const savedRequest = await request.save();
 
-      console.log(savedRequest);
-
       res.json({
         message: `Request ${status} successfully !!`,
         data: savedRequest,
@@ -104,7 +102,9 @@ connectionRequestRouter.get("/request/received", authUser, async (req, res) => {
     const pendingConnection = await ConnectionRequest.find({
       toUserId: loggedInUser._id,
       status: "interested",
-    }).populate({ path: "fromUserId", select: USER_SAFE_DATA });
+    })
+      .select(["_id", "fromUserId"])
+      .populate({ path: "fromUserId", select: USER_SAFE_DATA });
 
     res.json({
       message: "Data fetched successfully !!",

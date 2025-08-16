@@ -82,7 +82,7 @@ userSchema.methods.comparePassword = async function (enteredPassword) {
 };
 
 userSchema.methods.generateJWT = function () {
-  return jwt.sign({ _id: this._id }, "DEV_TENDER_WEB", {
+  return jwt.sign({ _id: this._id }, process.env.TOKEN_SECRET, {
     expiresIn: "1d",
   });
 };

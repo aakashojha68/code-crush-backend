@@ -1,6 +1,5 @@
 const mongoose = require("mongoose");
-const mongodb_url =
-  "mongodb+srv://aakashojha68:KYqcDdTf0gflfDt6@cluster0.ykznzlk.mongodb.net/devTinder";
+const mongodb_url = process.env.DATA_BASE_URL;
 
 const connectDb = async () => {
   try {
