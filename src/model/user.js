@@ -58,7 +58,7 @@ const userSchema = new Schema(
       type: String,
       required: [true, "About is required !!"],
       minLength: [5, "About must be 5 character long !!"],
-      maxLength: [50, "About must not exceed 50 characters !!"],
+      maxLength: [100, "About must not exceed 50 characters !!"],
       trim: true,
     },
     photoUrl: {

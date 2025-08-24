@@ -53,8 +53,12 @@ connectionRequestRouter.get(
 
       const response = await connectionRequestInstance.save();
 
+      const message =
+        status === "ignored"
+          ? "Invitation ignored successfully !!"
+          : "Invitation sent successfully !!";
       res.json({
-        message: `${loggedInUser.firstName} successfully sent invitation request to ${toUserData.firstName}`,
+        message: message,
         data: response,
       });
     } catch (error) {

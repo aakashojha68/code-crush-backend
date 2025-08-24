@@ -48,18 +48,20 @@ userRouter.get("/user/feed", authUser, async (req, res) => {
       $or: [{ fromUserId: loggedInUser._id }, { toUserId: loggedInUser._id }],
     });
 
-    const uniqueUserId = new Set();
+    const uniqueUserId = new Set([loggedInUser._id.toString()]);
     connections.forEach((req) => {
       uniqueUserId.add(req.fromUserId.toString());
       uniqueUserId.add(req.toUserId.toString());
     });
 
-    const users = await User.find({ _id: { $nin: [...uniqueUserId] } }).limit(
+    const uniqueUserIdArray = [...uniqueUserId];
+
+    const users = await User.find({ _id: { $nin: uniqueUserIdArray } }).limit(
       intLimit
     );
 
     const totalUsers = await User.countDocuments({
-      _id: { $nin: [...uniqueUserId] },
+      _id: { $nin: uniqueUserIdArray },
     });
 
     res.status(200).json({

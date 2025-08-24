@@ -49,7 +49,6 @@ const initializeSocket = (server) => {
         });
 
         message = await message.populate("senderId", "firstName lastName");
-        console.log(message);
 
         io.to(roomId).emit("messageResponse", message);
       } catch (error) {
