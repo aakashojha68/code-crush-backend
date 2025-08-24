@@ -57,19 +57,25 @@ authRouter.post("/login", async (req, res) => {
     const { email, password } = req.body;
 
     if (!email?.trim() || !password?.trim()) {
-      throw new Error("Invalid payload !!");
+      return res
+        .status(400)
+        .send({ message: "Invalid credentials !!", data: null });
     }
 
     const user = await User.findOne({ email });
 
     if (!user) {
-      throw new Error("Invalid credentials !!");
+      return res
+        .status(400)
+        .send({ message: "Invalid credentials !!", data: null });
     }
 
     const isPasswordValid = await user.comparePassword(password);
 
     if (!isPasswordValid) {
-      throw new Error("Invalid credentials !!");
+      return res
+        .status(400)
+        .send({ message: "Invalid credentials !!", data: null });
     }
 
     // create a json web token

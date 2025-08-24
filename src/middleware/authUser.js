@@ -38,7 +38,9 @@ const authUser = async (req, res, next) => {
         data: null,
       });
     } else {
-      return res.status(400).send("Error : " + error.message);
+      return res
+        .status(400)
+        .send({ message: "Error : " + error.message, data: null });
     }
   }
 };
